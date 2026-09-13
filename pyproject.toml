@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agentic-memory-benchmark"
+version = "0.1.0"
+description = "SACAM - frozen, reproducible benchmark and evaluation instrument for agentic-memory systems"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "SACAM project contributors" }]
+keywords = ["llm", "agents", "memory", "benchmark", "evaluation", "research"]
+
+[project.urls]
+Repository = "https://github.com/example/agentic-memory-benchmark"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+# NOTE: Runtime dependencies are intentionally NOT declared here yet.
+# They will be pinned in Milestone 2 (evaluation harness) so that the freezing
+# of the scientific protocol is not entangled with a dependency resolution.

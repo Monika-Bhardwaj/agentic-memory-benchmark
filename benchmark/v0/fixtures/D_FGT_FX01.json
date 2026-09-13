@@ -1,0 +1,53 @@
+{
+  "task_id": "D_FGT_FX01",
+  "benchmark_version": "v0.1",
+  "category": "forgetting",
+  "difficulty": 2,
+  "description": "A stored detail is explicitly forgotten; the final query must not restate the forgotten value.",
+  "scenario": "You are an office assistant for a small startup called Ferric Labs. Users give you information over time and occasionally ask you questions. Answer precisely using the information provided in this conversation.",
+  "tags": ["explicit_forget", "obsolete", "fixture"],
+  "events": [
+    {
+      "event_id": "e1",
+      "kind": "user_message",
+      "text": "Set up the demo account security answer: it is Callisto.",
+      "item": {
+        "item_id": "m1",
+        "content": "Demo account security answer: Callisto.",
+        "metadata": {
+          "source": "user",
+          "timestamp": 1,
+          "confidence": 1.0,
+          "adversarial": false,
+          "authority": "user"
+        }
+      }
+    },
+    { "event_id": "e2", "kind": "user_message", "text": "Great, we'll use that demo account for the walkthrough later." },
+    {
+      "event_id": "e3",
+      "kind": "memory_forget",
+      "text": "We're retiring that vendor. Please forget the demo account security answer.",
+      "item_id": "m1"
+    },
+    { "event_id": "e4", "kind": "user_message", "text": "Okay, the walkthrough is about to start." },
+    { "event_id": "e5", "kind": "query", "text": "What is the security answer for the demo account?" }
+  ],
+  "query": "What is the security answer for the demo account?",
+  "distractor_event_ids": ["e2"],
+  "ground_truth": {
+    "required_values": [],
+    "forbidden_values": ["Callisto"]
+  },
+  "success_criterion": {
+    "type": "contains_all",
+    "values": [],
+    "forbid": ["callisto"],
+    "normalization": "lower_strip"
+  },
+  "expected_memory_operation": "memory.add(m1) at e1; memory.forget(m1) at e3; at query time m1 must not resurface and the value must not be produced.",
+  "memory_trace": ["ADD m1", "FORGET m1"],
+  "required_item_ids": [],
+  "failure_categories": ["FORGETTING_FAILURE", "REASONING_FAILURE"],
+  "seed": 401
+}

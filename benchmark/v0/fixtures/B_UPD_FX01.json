@@ -1,0 +1,63 @@
+{
+  "task_id": "B_UPD_FX01",
+  "benchmark_version": "v0.1",
+  "category": "updating",
+  "difficulty": 1,
+  "description": "An existing memory is authoritatively replaced; the answer must follow the new value.",
+  "scenario": "You are an office assistant for a small startup called Ferric Labs. Users give you information over time and occasionally ask you questions. Answer precisely using the information provided in this conversation.",
+  "tags": ["single_fact", "authoritative_update", "fixture"],
+  "events": [
+    {
+      "event_id": "e1",
+      "kind": "user_message",
+      "text": "For the record, I love coffee. Always go with coffee for me.",
+      "item": {
+        "item_id": "m1",
+        "content": "User drink preference: coffee.",
+        "metadata": {
+          "source": "user",
+          "timestamp": 1,
+          "confidence": 1.0,
+          "adversarial": false,
+          "authority": "user"
+        }
+      }
+    },
+    {
+      "event_id": "e2",
+      "kind": "memory_update",
+      "text": "Actually, I've switched to tea now — please use that preference from now on.",
+      "item_id": "m1",
+      "item": {
+        "item_id": "m1",
+        "content": "User drink preference: tea.",
+        "metadata": {
+          "source": "user",
+          "timestamp": 2,
+          "confidence": 1.0,
+          "adversarial": false,
+          "authority": "user"
+        }
+      }
+    },
+    { "event_id": "e3", "kind": "user_message", "text": "Do you know any good bike shops near the office?" },
+    { "event_id": "e4", "kind": "query", "text": "What should I order at the cafe given my drink preference?" }
+  ],
+  "query": "What should I order at the cafe given my drink preference?",
+  "distractor_event_ids": ["e3"],
+  "ground_truth": {
+    "required_values": ["tea"],
+    "forbidden_values": ["coffee"]
+  },
+  "success_criterion": {
+    "type": "contains_all",
+    "values": ["tea"],
+    "forbid": ["coffee"],
+    "normalization": "lower_strip"
+  },
+  "expected_memory_operation": "memory.add(m1 = coffee) at e1; memory.update(m1 -> tea) at e2 (authoritative replacement); answer follows tea.",
+  "memory_trace": ["ADD m1", "UPDATE m1"],
+  "required_item_ids": ["m1"],
+  "failure_categories": ["UPDATE_FAILURE", "RETRIEVAL_FAILURE", "REASONING_FAILURE"],
+  "seed": 201
+}

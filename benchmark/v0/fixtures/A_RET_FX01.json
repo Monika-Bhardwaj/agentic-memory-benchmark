@@ -1,0 +1,48 @@
+{
+  "task_id": "A_RET_FX01",
+  "benchmark_version": "v0.1",
+  "category": "retention",
+  "difficulty": 2,
+  "description": "Single invented fact introduced early, three distractors intervene, fact must be produced at the final query.",
+  "scenario": "You are an office assistant for a small startup called Ferric Labs. Users give you information over time and occasionally ask you questions. Answer precisely using the information provided in this conversation.",
+  "tags": ["single_fact", "distractors", "fixture"],
+  "events": [
+    {
+      "event_id": "e1",
+      "kind": "user_message",
+      "text": "By the way, our office trivia team is called The Meme Oracles.",
+      "item": {
+        "item_id": "m1",
+        "content": "Office trivia team name: The Meme Oracles.",
+        "metadata": {
+          "source": "coworker_alice",
+          "timestamp": 1,
+          "confidence": 1.0,
+          "adversarial": false,
+          "authority": "user"
+        }
+      }
+    },
+    { "event_id": "e2", "kind": "user_message", "text": "Have you seen the new coffee machine on the third floor?" },
+    { "event_id": "e3", "kind": "user_message", "text": "The afternoon sync got pushed back by an hour." },
+    { "event_id": "e4", "kind": "user_message", "text": "Somebody left a jacket in the conference room." },
+    { "event_id": "e5", "kind": "query", "text": "What is the name of our office trivia team?" }
+  ],
+  "query": "What is the name of our office trivia team?",
+  "distractor_event_ids": ["e2", "e3", "e4"],
+  "ground_truth": {
+    "required_values": ["The Meme Oracles"],
+    "forbidden_values": []
+  },
+  "success_criterion": {
+    "type": "contains_all",
+    "values": ["meme oracles"],
+    "forbid": [],
+    "normalization": "lower_strip"
+  },
+  "expected_memory_operation": "memory.add(m1) at e1; at query time m1 is retrieved and its value reproduced.",
+  "memory_trace": ["ADD m1"],
+  "required_item_ids": ["m1"],
+  "failure_categories": ["RETENTION_FAILURE", "RETRIEVAL_FAILURE", "IRRELEVANT_MEMORY_INTERFERENCE", "REASONING_FAILURE"],
+  "seed": 101
+}

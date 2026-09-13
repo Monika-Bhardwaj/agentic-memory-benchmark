@@ -1,0 +1,63 @@
+{
+  "task_id": "C_STL_FX01",
+  "benchmark_version": "v0.1",
+  "category": "stale_conflict",
+  "difficulty": 2,
+  "description": "Old and new conflicting information both exist with no update directive; the system must resolve toward the more recent value.",
+  "scenario": "You are an office assistant for a small startup called Ferric Labs. Users give you information over time and occasionally ask you questions. Answer precisely using the information provided in this conversation.",
+  "tags": ["conflict", "recency", "fixture"],
+  "events": [
+    {
+      "event_id": "e1",
+      "kind": "user_message",
+      "text": "The planning sync is in Room A tomorrow.",
+      "item": {
+        "item_id": "m1",
+        "content": "Planning sync location: Room A.",
+        "metadata": {
+          "source": "team_lead",
+          "timestamp": 1,
+          "confidence": 0.9,
+          "adversarial": false,
+          "authority": "team"
+        }
+      }
+    },
+    { "event_id": "e2", "kind": "user_message", "text": "Could you look up some bike shop hours for me?" },
+    {
+      "event_id": "e3",
+      "kind": "user_message",
+      "text": "Heads up — we're moving the planning sync to Room C.",
+      "item": {
+        "item_id": "m2",
+        "content": "Planning sync location: Room C.",
+        "metadata": {
+          "source": "team_lead",
+          "timestamp": 3,
+          "confidence": 0.9,
+          "adversarial": false,
+          "authority": "team"
+        }
+      }
+    },
+    { "event_id": "e4", "kind": "user_message", "text": "Someone left a jacket in the conference room." },
+    { "event_id": "e5", "kind": "query", "text": "Where is the planning sync being held tomorrow?" }
+  ],
+  "query": "Where is the planning sync being held tomorrow?",
+  "distractor_event_ids": ["e2", "e4"],
+  "ground_truth": {
+    "required_values": ["Room C"],
+    "forbidden_values": ["Room A"]
+  },
+  "success_criterion": {
+    "type": "contains_all",
+    "values": ["room c"],
+    "forbid": ["room a"],
+    "normalization": "lower_strip"
+  },
+  "expected_memory_operation": "Conflicting adds m1 (Room A) and m2 (Room C); no update/forget directive; the system must resolve the conflict toward the more recent m2.",
+  "memory_trace": ["ADD m1", "ADD m2"],
+  "required_item_ids": ["m2"],
+  "failure_categories": ["STALE_MEMORY_FAILURE", "RETRIEVAL_FAILURE", "IRRELEVANT_MEMORY_INTERFERENCE", "REASONING_FAILURE"],
+  "seed": 301
+}

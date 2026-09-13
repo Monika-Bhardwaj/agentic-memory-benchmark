@@ -1,0 +1,60 @@
+{
+  "benchmark_version": "v0.1",
+  "status": "frozen-allocation",
+  "generation_procedure": "EXPAND_BY_TEMPLATE_AND_ENTITY_POOL_SEEDED_RNG",
+  "total_tasks": 40,
+  "by_category_difficulty": {
+    "all": { "d1": 14, "d2": 14, "d3": 12 },
+    "retention": { "d1": 3, "d2": 3, "d3": 2 },
+    "updating": { "d1": 3, "d2": 3, "d3": 2 },
+    "stale_conflict": { "d1": 3, "d2": 2, "d3": 3 },
+    "forgetting": { "d1": 3, "d2": 3, "d3": 2 },
+    "adversarial": { "d1": 2, "d2": 3, "d3": 3 }
+  },
+  "tasks": [
+    { "task_id": "A_RET_01", "category": "retention", "difficulty": 1, "brief": "Recall a single invented identifier introduced one event earlier", "template": "RET_SINGLE_ID", "seed": 1001 },
+    { "task_id": "A_RET_02", "category": "retention", "difficulty": 1, "brief": "Recall a team/room name with one unrelated distractor", "template": "RET_NAME_1DIST", "seed": 1002 },
+    { "task_id": "A_RET_03", "category": "retention", "difficulty": 1, "brief": "Recall a deadline with one distractor", "template": "RET_DATE_1DIST", "seed": 1003 },
+    { "task_id": "A_RET_04", "category": "retention", "difficulty": 2, "brief": "Recall an identifier after 2-3 distractors", "template": "RET_ID_3DIST", "seed": 1004 },
+    { "task_id": "A_RET_05", "category": "retention", "difficulty": 2, "brief": "Recall a preference after semantically-similar distractor", "template": "RET_PREF_SIMDIST", "seed": 1005 },
+    { "task_id": "A_RET_06", "category": "retention", "difficulty": 2, "brief": "Recall one of two facts; ignore the decoy fact", "template": "RET_FACT_IGNORE_DECOY", "seed": 1006 },
+    { "task_id": "A_RET_07", "category": "retention", "difficulty": 3, "brief": "Combine two facts introduced with 5+ intervening events", "template": "RET_COMBINE_2", "seed": 1007 },
+    { "task_id": "A_RET_08", "category": "retention", "difficulty": 3, "brief": "Combine two facts with distracting similar facts", "template": "RET_COMBINE_SIMDIST", "seed": 1008 },
+
+    { "task_id": "B_UPD_01", "category": "updating", "difficulty": 1, "brief": "Update a single value; query immediately (no distractor)", "template": "UPD_IMMEDIATE", "seed": 2001 },
+    { "task_id": "B_UPD_02", "category": "updating", "difficulty": 1, "brief": "Update a value; one distractor between update and query", "template": "UPD_1DIST", "seed": 2002 },
+    { "task_id": "B_UPD_03", "category": "updating", "difficulty": 1, "brief": "Update a meeting location with one distractor", "template": "UPD_LOCATION_1DIST", "seed": 2003 },
+    { "task_id": "B_UPD_04", "category": "updating", "difficulty": 2, "brief": "Update a value; 2-3 distractors afterwards", "template": "UPD_3DIST", "seed": 2004 },
+    { "task_id": "B_UPD_05", "category": "updating", "difficulty": 2, "brief": "Update a value twice in the session; final value governs", "template": "UPD_DOUBLE", "seed": 2005 },
+    { "task_id": "B_UPD_06", "category": "updating", "difficulty": 2, "brief": "Update one of two stored facts; keep the other", "template": "UPD_ONE_OF_TWO", "seed": 2006 },
+    { "task_id": "B_UPD_07", "category": "updating", "difficulty": 3, "brief": "Update after 5+ intervening events", "template": "UPD_5DIST_AFTER_UPDATE", "seed": 2007 },
+    { "task_id": "B_UPD_08", "category": "updating", "difficulty": 3, "brief": "Update a value that had already been updated once (chained)", "template": "UPD_CHAINED", "seed": 2008 },
+
+    { "task_id": "C_STL_01", "category": "stale_conflict", "difficulty": 1, "brief": "Conflicting add with one distractor; resolve to new", "template": "STL_IMMEDIATE_CONFLICT", "seed": 3001 },
+    { "task_id": "C_STL_02", "category": "stale_conflict", "difficulty": 1, "brief": "Conflicting add; new info is more recent; query after no extra events", "template": "STL_RECENT_WINS", "seed": 3002 },
+    { "task_id": "C_STL_03", "category": "stale_conflict", "difficulty": 1, "brief": "Conflicting add where newer value has higher-confidence source", "template": "STL_AUTHORITY_WINS", "seed": 3003 },
+    { "task_id": "C_STL_04", "category": "stale_conflict", "difficulty": 2, "brief": "Conflict resolved by recency after 2-3 distractors", "template": "STL_3DIST", "seed": 3004 },
+    { "task_id": "C_STL_05", "category": "stale_conflict", "difficulty": 2, "brief": "Conflict where the OLD value is semantically closer to the query", "template": "STL_OLD_SIMILAR", "seed": 3005 },
+    { "task_id": "C_STL_06", "category": "stale_conflict", "difficulty": 3, "brief": "Conflict among three values; the middle one is correct", "template": "STL_THREE_VALUES_MIDDLE", "seed": 3006 },
+    { "task_id": "C_STL_07", "category": "stale_conflict", "difficulty": 3, "brief": "Conflict after 5+ events with multiple similar distractors", "template": "STL_5DIST", "seed": 3007 },
+    { "task_id": "C_STL_08", "category": "stale_conflict", "difficulty": 3, "brief": "Conflict where newer value is low-confidence but explicitly confirmed", "template": "STL_CONFIRMED_LOW_CONF", "seed": 3008 },
+
+    { "task_id": "D_FGT_01", "category": "forgetting", "difficulty": 1, "brief": "Forget an item; query immediately; value must not resurface", "template": "FGT_IMMEDIATE", "seed": 4001 },
+    { "task_id": "D_FGT_02", "category": "forgetting", "difficulty": 1, "brief": "Forget an item; one distractor before query", "template": "FGT_1DIST", "seed": 4002 },
+    { "task_id": "D_FGT_03", "category": "forgetting", "difficulty": 1, "brief": "Forget a numeric detail; query must not state it", "template": "FGT_NUMBER", "seed": 4003 },
+    { "task_id": "D_FGT_04", "category": "forgetting", "difficulty": 2, "brief": "Forget an item; 2-3 distractors; value must not resurface", "template": "FGT_3DIST", "seed": 4004 },
+    { "task_id": "D_FGT_05", "category": "forgetting", "difficulty": 2, "brief": "Forget then re-ask after a task-related comment circles back", "template": "FGT_CIRCLEBACK", "seed": 4005 },
+    { "task_id": "D_FGT_06", "category": "forgetting", "difficulty": 2, "brief": "Forget one of two items; other must be retained and used", "template": "FGT_ONE_OF_TWO", "seed": 4006 },
+    { "task_id": "D_FGT_07", "category": "forgetting", "difficulty": 3, "brief": "Forget after 5+ events; then an oblique query references the fact", "template": "FGT_OBLIQUE", "seed": 4007 },
+    { "task_id": "D_FGT_08", "category": "forgetting", "difficulty": 3, "brief": "Forget an item but a semantically-similar retained item exists", "template": "FGT_SIMILAR_RETAINED", "seed": 4008 },
+
+    { "task_id": "E_ADS_01", "category": "adversarial", "difficulty": 1, "brief": "Untrusted low-confidence claim vs trusted claim; immediate query", "template": "ADS_IMMEDIATE", "seed": 5001 },
+    { "task_id": "E_ADS_02", "category": "adversarial", "difficulty": 1, "brief": "Untrusted claim enters via anonymous source; prefer trusted", "template": "ADS_ANON_SOURCE", "seed": 5002 },
+    { "task_id": "E_ADS_03", "category": "adversarial", "difficulty": 2, "brief": "Poisoned claim is semantically similar to the trusted value", "template": "ADS_SIMILAR_POISON", "seed": 5003 },
+    { "task_id": "E_ADS_04", "category": "adversarial", "difficulty": 2, "brief": "Poison arrives after distractors; trusted item older", "template": "ADS_LATE_POISON", "seed": 5004 },
+    { "task_id": "E_ADS_05", "category": "adversarial", "difficulty": 2, "brief": "High-confidence-looking but untrusted claim (conf paradox)", "template": "ADS_CONF_PARADOX", "seed": 5005 },
+    { "task_id": "E_ADS_06", "category": "adversarial", "difficulty": 3, "brief": "Multiple poisoned claims; only one trusted remains correct", "template": "ADS_MULTI_POISON", "seed": 5006 },
+    { "task_id": "E_ADS_07", "category": "adversarial", "difficulty": 3, "brief": "Poison claims both plausible values; query after 5+ events", "template": "ADS_BOTH_VALUES_5DIST", "seed": 5007 },
+    { "task_id": "E_ADS_08", "category": "adversarial", "difficulty": 3, "brief": "Poison recommendation embedded in otherwise-helpful context", "template": "ADS_EMBEDDED_HELPFUL", "seed": 5008 }
+  ]
+}
