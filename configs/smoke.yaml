@@ -1,0 +1,47 @@
+# SACAM v0.1 — smoke-scale experiment (instrument validation, no research claims).
+# Task subset keeps difficulty spread: 2 retention, 2 updating, 2 stale,
+# 1 forgetting, 1 adversarial (FROZEN allocation; see APPROVAL_REQUEST.md §5).
+experiment:
+  name: sacam_smoke_v01
+  benchmark_version: v0.1
+  phase: smoke
+  seeds: [42, 7, 2024]
+  tasks_subset:
+    - A_RET_01
+    - A_RET_07
+    - B_UPD_01
+    - B_UPD_06
+    - C_STL_01
+    - C_STL_04
+    - D_FGT_01
+    - E_ADS_01
+  systems:
+    - no_memory
+    - naive_retrieval
+    - structured_memory
+    - sacam_v0
+    - full_context
+  results_dir: results
+
+model:
+  name: mock_pattern_reader
+  temperature: 0
+  max_output_tokens: 512
+
+prompt_version: v0.1-p1
+
+memory:
+  retrieval_top_k: 3
+  memory_budget_items: 512
+  full_context_top_k: all
+  sacam_weights: {superseded: 0.1, untrusted: 0.1, recency: 0.2}
+
+evaluation:
+  primary_metric: tsr
+  mme: 0.05
+  retention_tolerance: -0.05
+
+harness:
+  respond_to_non_query_events: false
+  timeout_seconds: 60
+  max_retries: 1

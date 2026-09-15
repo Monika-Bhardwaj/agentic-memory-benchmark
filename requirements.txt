@@ -1,0 +1,7 @@
+# Runtime dependencies (pinned at freeze time).
+# Minimal by design: deterministic local retrieval, stdlib HTTP live adapter.
+jsonschema>=4.18,<5
+PyYAML>=6.0,<7
+
+# Dev/test
+pytest>=7.4,<9

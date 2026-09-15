@@ -1,0 +1,46 @@
+{
+  "name": "SACAM v0.1 benchmark pre-registration",
+  "version": "v0.1",
+  "date": "2026",
+  "approval": "Milestone 1 approved as designed by the requester; scripted identical write-directive stream approved.",
+  "benchmark": {
+    "path": "benchmark/v0/tasks.jsonl",
+    "schema": "benchmark/v0/schema.json",
+    "n_tasks": 40,
+    "categories": {"retention": 8, "updating": 8, "stale_conflict": 8, "forgetting": 8, "adversarial": 8},
+    "manifest": "benchmark/v0/task_manifest.json",
+    "immutability": "Tasks frozen after generation. Any change requires a new minor version (v0.2), never a silent edit."
+  },
+  "systems": ["no_memory", "naive_retrieval", "structured_memory", "sacam_v0", "full_context"],
+  "seeds": {"smoke": [42, 7, 2024], "full": [42, 7, 2024, 1337, 2718]},
+  "prompt_version": "v0.1-p1",
+  "memory_interface": {
+    "content_convention": "LABEL: VALUE.",
+    "adversarial_metadata": "is forecast as item-level 'adversarial' flag; NEVER rendered into prompts (only source/timestamp/confidence/authority are).",
+    "retrieval": "deterministic local term-overlap (frozen STOPWORDS); exactly one retrieval per task, at the query turn.",
+    "eviction": "none in v0 (budget 512 items)",
+    "write_stream": "scripted, identical across systems (approved)"
+  },
+  "evaluation": {
+    "primary_metric": "tsr",
+    "secondary_metrics": ["mcs", "category_success_rates", "retrieval_inclusion_rate", "poison_acceptance_rate", "store_growth", "token_overhead"],
+    "mme": 0.05,
+    "retention_tolerance": -0.05,
+    "success_predicate": "contains_all on success_criterion.values, with forbid-only support",
+    "failure_taxonomy": ["RETENTION_FAILURE", "UPDATE_FAILURE", "STALE_MEMORY_FAILURE", "FORGETTING_FAILURE", "RETRIEVAL_FAILURE", "REASONING_FAILURE", "ADVERSARIAL_MEMORY_FAILURE", "IRRELEVANT_MEMORY_INTERFERENCE", "OTHER"]
+  },
+  "evidence_against_rules": {
+    "E1_direction": "median(TSR(sacam) - TSR(naive)) <= 0 or bootstrap upper bound <= 0",
+    "E2_no_mcs_advantage": "MCS(sacam) - MCS(naive) <= 0",
+    "E3_retention_tradeoff": "MCS advantage while TSR(sacam, retention) - TSR(naive, retention) < -0.05",
+    "E4_context_confound": "|MCS(sacam) - MCS(full_context)| <= 0.05 with overlapping CI",
+    "E5_misattribution": "SACAM gain dominated by fewer REASONING_FAILURE labels rather than stale/forgetting/adversarial labels"
+  },
+  "constraints": [
+    "No fabrication of results; no tuning on the frozen task set.",
+    "Raw results preserved append-only; never overwritten.",
+    "Any label beyond the frozen taxonomy, or any null-answer, is classified OTHER (never silently dropped).",
+    "SACAM v0 is a placeholder plugin only; its results are not evidence about the full sleep-consolidation architecture.",
+    "Smoke runs use a deterministic mock reader and yield NO research claims."
+  ]
+}

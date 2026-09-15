@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+
+# Environments / secrets
+.env
+.env.local
+
+# Editor
+.idea/
+.vscode/
+*.swp
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Experiment infra: metadata is committed judiciously; runs are never committed.
+# Raw run artifacts are (re-)generable from a frozen config + model + seeds,
+# and their content can be large. On-demand archival is a project decision.
+results/
+
+# Test/pyflakes noise
+.pytest_cache/
+.coverage
+htmlcov/

@@ -1,8 +1,11 @@
 # Milestone 1 — Review & Approval Request
+# Milestone 2 — Implemented  ·  Milestone 3 smoke run — completed (instrument validation only)
 
-This repository currently contains **Milestone 1 only** (scientific specification and
-benchmark v0 design). **No implementation code exists.** Please review the frozen
-protocol and approve before Milestone 2 begins.
+This repository contains **Milestone 1 (specification, approved)** and **Milestone 2
+(evaluation harness)**, plus the **Milestone 3 smoke-scale run using the deterministic
+mock model**. No research claim exists: the smoke output is instrument validation and is
+explicitly not evidence about SACAM. The full live-model benchmark run is unexecuted and
+is the only remaining gate before any research statement.
 
 ## 1. Deliverables produced (map to the required response format)
 
@@ -31,8 +34,8 @@ protocol and approve before Milestone 2 begins.
 | 21 | Proposed repository architecture | `docs/architecture.md` | Done |
 | 22 | Milestone 2 implementation plan | this file, §5 | Done |
 | 23 | Milestone 3 experiment plan | this file, §6 | Done |
-| 24 | Open scientific decisions | this file, §4 (need explicit sign-off) | **OPEN** |
-| 25 | Acceptance criteria (current status) | this file, §7 | **OPEN** |
+| 24 | Open scientific decisions | this file, §4 | ✅ approved as designed |
+| 25 | Acceptance criteria (current status) | this file, §7 | ✅ M2 done; M3 smoke done |
 
 ## 2. Executive summary of the design
 
@@ -56,7 +59,11 @@ protocol and approve before Milestone 2 begins.
 - v0 SACAM is a minimal placeholder (read-time management), not the full architecture.
 - The smoke run will not be interpreted through the evidence-against rule.
 
-## 4. Open decisions requiring explicit sign-off
+## 4. Decisions — approved as designed (with sign-off recorded)
+
+The requester approved Milestone 1 **as designed**, including **scripted identical
+write directives** (decision #1). All ten decisions were adopted and are frozen; the
+"If you disagree" column is retained only as the documented fallback for future versions.
 
 | # | Decision | Recommendation | If you disagree |
 | --- | --- | --- | --- |
@@ -127,17 +134,17 @@ treated as immutable.
 | Failure taxonomy frozen | ✅ done |
 | Evidence-against rule exists | ✅ done |
 | Evaluation outcome-blind | ✅ done |
-| Common interfaces exist | ✅ specified (implemented in M2) |
-| Configs reproducible | ⏳ M2 |
-| Seeds controlled | ✅ policy frozen |
-| Raw results preserved | ⏳ M2 |
-| Analysis automated | ⏳ M2 |
-| Smoke experiment runs | ⏳ M3 |
-| Strongest limitation reported | ⏳ M3 |
-| Tests pass | ⏳ M2 |
-| README reproducible | ⏳ M2/M3 |
-| No results fabricated | ✅ (no results yet; enforced henceforth) |
-| No benchmark choices changed after results | ✅ (freeze policy enforced) |
+| Common interfaces exist | ✅ implemented (M2) |
+| Configs reproducible | ✅ done (M2) |
+| Seeds controlled | ✅ policy frozen + enforced |
+| Raw results preserved | ✅ append-only runner (M2, smoke exercised) |
+| Analysis automated | ✅ `experiments/analyze.py` (smoke exercised) |
+| Smoke experiment runs | ✅ done (mock model; `sacam_smoke_v01_b5f0e8d9`) |
+| Strongest limitation reported | ⏳ gated on full run |
+| Tests pass | ✅ 23 passed |
+| README reproducible | ✅ commands documented |
+| No results fabricated | ✅ (no research results exist; smoke labeled non-evidence) |
+| No benchmark choices changed after results | ✅ (freeze policy enforced; `tasks.jsonl` hashed `f78a3491…`) |
 | Framework can show SACAM is wrong | ✅ by design (E1–E5, controls) |
 
 ## 8. How to approve
