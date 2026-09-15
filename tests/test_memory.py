@@ -2,6 +2,7 @@ from src.memory.base import MemoryItem, MemoryLogger
 from src.memory.naive_retrieval import NaiveRetrieval
 from src.memory.no_memory import NoMemory
 from src.memory.sacam_v0 import SACAMv0
+from src.memory.sacam_v1 import SACAMv1
 from src.memory.structured_memory import StructuredMemory
 
 
@@ -56,6 +57,27 @@ def test_sacam_v0_manages_superseded_and_untrusted():
     assert top.item_id == "m1"
     ranking = [r.item_id for r in retrieved]
     assert ranking.index("m1") <= ranking.index("m2")
+
+
+def test_sacam_v1_never_supersedes_stronger_claim():
+    """v0.2 fix: an untrusted impostor must not bury a high-confidence trusted claim."""
+    m = SACAMv1(0, MemoryLogger())
+    m.add(_item("m1", "Release date: December 1st", ts=1, source="admin", conf=1.0))
+    m.add(_item("m2", "Release date: March 1st", ts=2, source="office_pool", conf=0.2, forbidden=True))
+    assert "m1" not in m._superseded, "trusted claim must not be marked superseded"
+    retrieved = m.retrieve("Release date", 3)
+    assert retrieved[0].item_id == "m1"
+    assert m._multiplier(m._items["m1"]) > m._multiplier(m._items["m2"])
+
+
+def test_sacam_v1_still_supersedes_stronger_new_claim():
+    """A distinct, same-label, stronger new claim still supersedes the old one."""
+    m = SACAMv1(0, MemoryLogger())
+    m.add(_item("m1", "Release date: March 3rd", ts=1, source="junior", conf=0.7))
+    m.add(_item("m2", "Release date: June 10th", ts=2, source="admin", conf=1.0))
+    assert "m1" in m._superseded
+    retrieved = m.retrieve("Release date", 3)
+    assert retrieved[0].item_id == "m2"
 
 
 def test_full_context_is_naive_with_all():

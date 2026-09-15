@@ -137,6 +137,9 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", required=True)
     parser.add_argument("--experiment-id", default=None)
+    parser.add_argument("--primary", default="sacam_v0",
+                        help="system treated as the 'active management' subject in E-rules "
+                             "(default sacam_v0; use sacam_v1 for the v0.2 A/B)")
     args = parser.parse_args()
 
     cfg = load_config(args.config)
@@ -169,12 +172,12 @@ def main() -> None:
             "retrieval_calls": 1 if sc else 0,
         }
 
-    s_sam = tables.get("sacam_v0")
+    s_sam = tables.get(args.primary)
     s_naive = tables.get("naive_retrieval")
     s_full = tables.get("full_context")
     e_rules = {}
     if s_sam and s_naive and s_full:
-        diffs_e1 = _per_seed_tsr_diff(by_sys.get("sacam_v0", []), by_sys.get("naive_retrieval", []))
+        diffs_e1 = _per_seed_tsr_diff(by_sys.get(args.primary, []), by_sys.get("naive_retrieval", []))
         lo, hi = _bootstrap_interval(diffs_e1)
         dMCS_n = s_sam["mcs"] - s_naive["mcs"]
         dTSR_ret = s_sam["tsr_retention"] - s_naive.get("tsr_retention", 0)
@@ -200,13 +203,14 @@ def main() -> None:
                 "mme": MME,
                 "rule_hit": abs(dMCS_full) <= MME,
             },
-            "E5_misattribution": _failure_shift(by_sys.get("sacam_v0", []), by_sys.get("naive_retrieval", [])) if
+            "E5_misattribution": _failure_shift(by_sys.get(args.primary, []), by_sys.get("naive_retrieval", [])) if
             "naive_retrieval" in by_sys else {},
         }
 
     any_rule = [k for k, v in e_rules.items() if "rule_hit" in v and v["rule_hit"]]
     evidence_row = {
         "phase": cfg.phase,
+        "primary": args.primary,
         "evidence_applies": cfg.phase == "full",
         "not_supported": any(bool(x) for x in any_rule),
         "hit_rules": any_rule,
@@ -261,6 +265,7 @@ def _write_report(path: Path, out: dict) -> None:
     lines += ["", "## E-rules (evidence-against)", ""]
     applies = "**Applies to this phase:** yes" if out["evidence"]["evidence_applies"] else "**Applies to this phase:** NO — illustrative only (frozen rule targets the full run)."
     lines.append(applies)
+    lines.append(f"primary subject: `{out['evidence'].get('primary', 'sacam_v0')}`")
     lines.append("")
     for k, v in out["e_rules"].items():
         hit = f"rule_hit={v.get('rule_hit')}" if "rule_hit" in v else ""

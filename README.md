@@ -58,6 +58,7 @@ Benchmark v0.1: 40 deterministic synthetic tasks across five categories
 | B. Naive Retrieval | Append + deterministic term-overlap retrieval + top-k; no management. |
 | C. Structured Memory | Typed records with key-based reconciliation (newest-wins per key); minimal structure. |
 | D. SACAM (v0) | Minimal active-management plugin (superseded/untrusted downranking, recency) behind the common interface. Full architecture is future work. |
+| D2. SACAM (v1) | v0.2 provenance-aware supersession fix: same-label claims are superseded only by not-weaker claims (`src/memory/sacam_v1.py`). |
 | Control: Full-Context | Naive retrieval with `top_k = all` (isolates the "more context, not better memory" confound). |
 
 Precise definitions: [`docs/benchmark_specification.md`](docs/benchmark_specification.md).

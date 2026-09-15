@@ -11,6 +11,7 @@ from src.memory.base import MemoryLogger
 from src.memory.naive_retrieval import NaiveRetrieval
 from src.memory.no_memory import NoMemory
 from src.memory.sacam_v0 import SACAMv0
+from src.memory.sacam_v1 import SACAMv1
 from src.memory.structured_memory import StructuredMemory
 
 SYSTEM_DESCRIPTIONS = {
@@ -18,6 +19,7 @@ SYSTEM_DESCRIPTIONS = {
     "naive_retrieval": "B - Naive retrieval memory",
     "structured_memory": "C - Structured memory",
     "sacam_v0": "D - SACAM v0 (placeholder, read-time management)",
+    "sacam_v1": "D2 - SACAM v1 (v0.2 provenance-aware supersession fix)",
     "full_context": "Control - naive retrieval with top_k = all",
 }
 
@@ -31,6 +33,8 @@ def build_system(system_id: str, seed: int, logger: MemoryLogger, weights: dict 
         return StructuredMemory(seed, logger)
     if system_id == "sacam_v0":
         return SACAMv0(seed, logger, weights=weights)
+    if system_id == "sacam_v1":
+        return SACAMv1(seed, logger, weights=weights)
     if system_id == "full_context":
         return NaiveRetrieval(seed, logger)
     raise KeyError(f"unknown system: {system_id!r}")

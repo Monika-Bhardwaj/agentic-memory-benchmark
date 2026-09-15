@@ -106,7 +106,7 @@ def load_config(path: Path | str) -> ExperimentConfig:
     cfg.evaluation.setdefault("mme", DEFAULT_MME)
     cfg.evaluation.setdefault("retention_tolerance", DEFAULT_RETENTION_TOLERANCE)
     for sys_id in cfg.systems:
-        assert sys_id in ("no_memory", "naive_retrieval", "structured_memory", "sacam_v0", "full_context"), sys_id
+        assert sys_id in ("no_memory", "naive_retrieval", "structured_memory", "sacam_v0", "sacam_v1", "full_context"), sys_id
     return cfg
 
 
