@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/agentic-memory-benchmark/v1/task.schema.json",
+  "title": "Causal memory evaluation task (v1)",
+  "description": "A single frozen synthetic multimodal task with causal interventions.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "task_id",
+    "benchmark_version",
+    "category",
+    "difficulty",
+    "description",
+    "scenario",
+    "events",
+    "query",
+    "ground_truth",
+    "success_criterion",
+    "intervention",
+    "required_item_ids",
+    "failure_categories",
+    "seed"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "pattern": "^[A-Z]+_[A-Z]+_\\d{2}$"
+    },
+    "benchmark_version": { "const": "v1" },
+    "category": {
+      "type": "string",
+      "enum": ["retention", "updating", "stale_conflict", "forgetting", "adversarial", "counterfactual", "distractor"]
+    },
+    "difficulty": { "type": "integer", "enum": [1, 2, 3] },
+    "description": { "type": "string" },
+    "scenario": { "type": "string" },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "events": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/event" }
+    },
+    "query": { "type": "string" },
+    "ground_truth": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required_values", "forbidden_values"],
+      "properties": {
+        "required_values": { "type": "array", "items": { "type": "string" } },
+        "forbidden_values": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "success_criterion": { "$ref": "#/$defs/success_criterion" },
+    "intervention": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["none", "distractor", "stale_conflict", "deletion", "counterfactual", "adversarial"]
+        },
+        "params": { "type": "object" }
+      }
+    },
+    "required_item_ids": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^m[0-9]+$" }
+    },
+    "failure_categories": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/failure_label" },
+      "uniqueItems": true
+    },
+    "seed": { "type": "integer" }
+  },
+  "$defs": {
+    "event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["event_id", "kind"],
+      "properties": {
+        "event_id": { "type": "string", "pattern": "^e[0-9]+$" },
+        "kind": {
+          "type": "string",
+          "enum": ["user_message", "memory_update", "memory_forget", "query"]
+        },
+        "text": { "type": "string" },
+        "image": { "type": "string" },
+        "item": { "$ref": "#/$defs/memory_item" },
+        "item_id": { "type": "string", "pattern": "^m[0-9]+$" },
+        "is_distractor": { "type": "boolean" }
+      }
+    },
+    "memory_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["item_id", "content"],
+      "properties": {
+        "item_id": { "type": "string", "pattern": "^m[0-9]+$" },
+        "content": { "type": "string" },
+        "metadata": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["source", "timestamp", "confidence", "adversarial", "authority"],
+          "properties": {
+            "source": { "type": "string" },
+            "timestamp": { "type": "integer", "minimum": 0 },
+            "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+            "adversarial": { "type": "boolean" },
+            "authority": { "type": "string" }
+          }
+        }
+      }
+    },
+    "success_criterion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "values", "forbid", "normalization"],
+      "properties": {
+        "type": { "const": "contains_all" },
+        "values": { "type": "array", "items": { "type": "string" } },
+        "forbid": { "type": "array", "items": { "type": "string" } },
+        "normalization": { "type": "string", "enum": ["lower_strip", "none"] }
+      }
+    },
+    "failure_label": {
+      "type": "string",
+      "enum": [
+        "PERCEPTION_FAILURE",
+        "MEMORY_WRITE_FAILURE",
+        "RETRIEVAL_FAILURE",
+        "STALE_MEMORY_FAILURE",
+        "CONFLICT_RESOLUTION_FAILURE",
+        "DELETION_FAILURE",
+        "COUNTERFACTUAL_MEMORY_FAILURE",
+        "DISTRACTOR_INTERFERENCE",
+        "IRRELEVANT_MEMORY_INTERFERENCE",
+        "REASONING_FAILURE",
+        "HALLUCINATION",
+        "CALIBRATION_FAILURE",
+        "BUDGET_FAILURE",
+        "SYSTEM_API_FAILURE"
+      ]
+    }
+  }
+}

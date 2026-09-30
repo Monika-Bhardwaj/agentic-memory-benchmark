@@ -1,0 +1,29 @@
+{
+  "benchmark_version": "v1",
+  "status": "draft",
+  "generation_procedure": "PROCEDURAL_MULTIMODAL_WITH_INTERVENTIONS",
+  "total_tasks": 80,
+  "by_category": {
+    "retention": 12,
+    "updating": 12,
+    "stale_conflict": 12,
+    "forgetting": 12,
+    "adversarial": 12,
+    "counterfactual": 10,
+    "distractor": 10
+  },
+  "splits": {
+    "dev": {"seed_range": [1000, 1999], "n_tasks": 40},
+    "held_out": {"seed_range": [5000, 5999], "n_tasks": 40}
+  },
+  "categories": {
+    "retention": {"description": "Info introduced earlier must be produced at query", "intervention": "none"},
+    "updating": {"description": "Authoritative update directive changes value", "intervention": "update"},
+    "stale_conflict": {"description": "Conflicting adds, resolve by recency/authority", "intervention": "stale_conflict"},
+    "forgetting": {"description": "Deletion directive, item must not resurface", "intervention": "deletion"},
+    "adversarial": {"description": "Untrusted injection vs trusted claim", "intervention": "adversarial"},
+    "counterfactual": {"description": "Paired conditions, only memory state differs", "intervention": "counterfactual"},
+    "distractor": {"description": "Irrelevant info should not affect answer", "intervention": "distractor"}
+  },
+  "tasks": []
+}
