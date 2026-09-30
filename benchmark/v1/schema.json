@@ -24,7 +24,7 @@
   "properties": {
     "task_id": {
       "type": "string",
-      "pattern": "^[A-Z]+_[A-Z]+_\\d{2}$"
+      "pattern": "^[A-Z]+_\\d{2}$"
     },
     "benchmark_version": { "const": "v1" },
     "category": {
@@ -61,7 +61,7 @@
       "properties": {
         "type": {
           "type": "string",
-          "enum": ["none", "distractor", "stale_conflict", "deletion", "counterfactual", "adversarial"]
+          "enum": ["none", "update", "distractor", "stale_conflict", "deletion", "counterfactual", "adversarial"]
         },
         "params": { "type": "object" }
       }
@@ -136,10 +136,14 @@
         "STALE_MEMORY_FAILURE",
         "CONFLICT_RESOLUTION_FAILURE",
         "DELETION_FAILURE",
+        "FORGETTING_FAILURE",
         "COUNTERFACTUAL_MEMORY_FAILURE",
+        "ADVERSARIAL_MEMORY_FAILURE",
         "DISTRACTOR_INTERFERENCE",
         "IRRELEVANT_MEMORY_INTERFERENCE",
         "REASONING_FAILURE",
+        "RETENTION_FAILURE",
+        "UPDATE_FAILURE",
         "HALLUCINATION",
         "CALIBRATION_FAILURE",
         "BUDGET_FAILURE",

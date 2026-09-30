@@ -1,6 +1,6 @@
 {
   "benchmark_version": "v1",
-  "status": "draft",
+  "status": "generated",
   "generation_procedure": "PROCEDURAL_MULTIMODAL_WITH_INTERVENTIONS",
   "total_tasks": 80,
   "by_category": {
@@ -13,17 +13,612 @@
     "distractor": 10
   },
   "splits": {
-    "dev": {"seed_range": [1000, 1999], "n_tasks": 40},
-    "held_out": {"seed_range": [5000, 5999], "n_tasks": 40}
+    "dev": {
+      "seed_range": [
+        1000,
+        1999
+      ],
+      "n_tasks": 40
+    },
+    "held_out": {
+      "seed_range": [
+        5000,
+        5999
+      ],
+      "n_tasks": 40
+    }
   },
   "categories": {
-    "retention": {"description": "Info introduced earlier must be produced at query", "intervention": "none"},
-    "updating": {"description": "Authoritative update directive changes value", "intervention": "update"},
-    "stale_conflict": {"description": "Conflicting adds, resolve by recency/authority", "intervention": "stale_conflict"},
-    "forgetting": {"description": "Deletion directive, item must not resurface", "intervention": "deletion"},
-    "adversarial": {"description": "Untrusted injection vs trusted claim", "intervention": "adversarial"},
-    "counterfactual": {"description": "Paired conditions, only memory state differs", "intervention": "counterfactual"},
-    "distractor": {"description": "Irrelevant info should not affect answer", "intervention": "distractor"}
+    "retention": {
+      "description": "Info introduced earlier must be produced at query",
+      "intervention": "none"
+    },
+    "updating": {
+      "description": "Authoritative update directive changes value",
+      "intervention": "update"
+    },
+    "stale_conflict": {
+      "description": "Conflicting adds, resolve by recency/authority",
+      "intervention": "stale_conflict"
+    },
+    "forgetting": {
+      "description": "Deletion directive, item must not resurface",
+      "intervention": "deletion"
+    },
+    "adversarial": {
+      "description": "Untrusted injection vs trusted claim",
+      "intervention": "adversarial"
+    },
+    "counterfactual": {
+      "description": "Paired conditions, only memory state differs",
+      "intervention": "counterfactual"
+    },
+    "distractor": {
+      "description": "Irrelevant info should not affect answer",
+      "intervention": "distractor"
+    }
   },
-  "tasks": []
+  "tasks": [
+    {
+      "task_id": "RET_00",
+      "category": "retention",
+      "difficulty": 1,
+      "seed": 1000,
+      "split": "dev"
+    },
+    {
+      "task_id": "RET_01",
+      "category": "retention",
+      "difficulty": 2,
+      "seed": 1001,
+      "split": "dev"
+    },
+    {
+      "task_id": "RET_02",
+      "category": "retention",
+      "difficulty": 1,
+      "seed": 1002,
+      "split": "dev"
+    },
+    {
+      "task_id": "RET_03",
+      "category": "retention",
+      "difficulty": 1,
+      "seed": 1003,
+      "split": "dev"
+    },
+    {
+      "task_id": "RET_04",
+      "category": "retention",
+      "difficulty": 2,
+      "seed": 1004,
+      "split": "dev"
+    },
+    {
+      "task_id": "RET_05",
+      "category": "retention",
+      "difficulty": 1,
+      "seed": 1005,
+      "split": "dev"
+    },
+    {
+      "task_id": "RET_00",
+      "category": "retention",
+      "difficulty": 2,
+      "seed": 5000,
+      "split": "held_out"
+    },
+    {
+      "task_id": "RET_01",
+      "category": "retention",
+      "difficulty": 1,
+      "seed": 5001,
+      "split": "held_out"
+    },
+    {
+      "task_id": "RET_02",
+      "category": "retention",
+      "difficulty": 1,
+      "seed": 5002,
+      "split": "held_out"
+    },
+    {
+      "task_id": "RET_03",
+      "category": "retention",
+      "difficulty": 2,
+      "seed": 5003,
+      "split": "held_out"
+    },
+    {
+      "task_id": "RET_04",
+      "category": "retention",
+      "difficulty": 1,
+      "seed": 5004,
+      "split": "held_out"
+    },
+    {
+      "task_id": "RET_05",
+      "category": "retention",
+      "difficulty": 1,
+      "seed": 5005,
+      "split": "held_out"
+    },
+    {
+      "task_id": "UPD_00",
+      "category": "updating",
+      "difficulty": 2,
+      "seed": 1100,
+      "split": "dev"
+    },
+    {
+      "task_id": "UPD_01",
+      "category": "updating",
+      "difficulty": 1,
+      "seed": 1101,
+      "split": "dev"
+    },
+    {
+      "task_id": "UPD_02",
+      "category": "updating",
+      "difficulty": 1,
+      "seed": 1102,
+      "split": "dev"
+    },
+    {
+      "task_id": "UPD_03",
+      "category": "updating",
+      "difficulty": 2,
+      "seed": 1103,
+      "split": "dev"
+    },
+    {
+      "task_id": "UPD_04",
+      "category": "updating",
+      "difficulty": 1,
+      "seed": 1104,
+      "split": "dev"
+    },
+    {
+      "task_id": "UPD_05",
+      "category": "updating",
+      "difficulty": 1,
+      "seed": 1105,
+      "split": "dev"
+    },
+    {
+      "task_id": "UPD_00",
+      "category": "updating",
+      "difficulty": 1,
+      "seed": 5100,
+      "split": "held_out"
+    },
+    {
+      "task_id": "UPD_01",
+      "category": "updating",
+      "difficulty": 1,
+      "seed": 5101,
+      "split": "held_out"
+    },
+    {
+      "task_id": "UPD_02",
+      "category": "updating",
+      "difficulty": 2,
+      "seed": 5102,
+      "split": "held_out"
+    },
+    {
+      "task_id": "UPD_03",
+      "category": "updating",
+      "difficulty": 1,
+      "seed": 5103,
+      "split": "held_out"
+    },
+    {
+      "task_id": "UPD_04",
+      "category": "updating",
+      "difficulty": 1,
+      "seed": 5104,
+      "split": "held_out"
+    },
+    {
+      "task_id": "UPD_05",
+      "category": "updating",
+      "difficulty": 2,
+      "seed": 5105,
+      "split": "held_out"
+    },
+    {
+      "task_id": "STL_00",
+      "category": "stale_conflict",
+      "difficulty": 1,
+      "seed": 1200,
+      "split": "dev"
+    },
+    {
+      "task_id": "STL_01",
+      "category": "stale_conflict",
+      "difficulty": 1,
+      "seed": 1201,
+      "split": "dev"
+    },
+    {
+      "task_id": "STL_02",
+      "category": "stale_conflict",
+      "difficulty": 2,
+      "seed": 1202,
+      "split": "dev"
+    },
+    {
+      "task_id": "STL_03",
+      "category": "stale_conflict",
+      "difficulty": 1,
+      "seed": 1203,
+      "split": "dev"
+    },
+    {
+      "task_id": "STL_04",
+      "category": "stale_conflict",
+      "difficulty": 1,
+      "seed": 1204,
+      "split": "dev"
+    },
+    {
+      "task_id": "STL_05",
+      "category": "stale_conflict",
+      "difficulty": 2,
+      "seed": 1205,
+      "split": "dev"
+    },
+    {
+      "task_id": "STL_00",
+      "category": "stale_conflict",
+      "difficulty": 1,
+      "seed": 5200,
+      "split": "held_out"
+    },
+    {
+      "task_id": "STL_01",
+      "category": "stale_conflict",
+      "difficulty": 2,
+      "seed": 5201,
+      "split": "held_out"
+    },
+    {
+      "task_id": "STL_02",
+      "category": "stale_conflict",
+      "difficulty": 1,
+      "seed": 5202,
+      "split": "held_out"
+    },
+    {
+      "task_id": "STL_03",
+      "category": "stale_conflict",
+      "difficulty": 1,
+      "seed": 5203,
+      "split": "held_out"
+    },
+    {
+      "task_id": "STL_04",
+      "category": "stale_conflict",
+      "difficulty": 2,
+      "seed": 5204,
+      "split": "held_out"
+    },
+    {
+      "task_id": "STL_05",
+      "category": "stale_conflict",
+      "difficulty": 1,
+      "seed": 5205,
+      "split": "held_out"
+    },
+    {
+      "task_id": "FGT_00",
+      "category": "forgetting",
+      "difficulty": 1,
+      "seed": 1300,
+      "split": "dev"
+    },
+    {
+      "task_id": "FGT_01",
+      "category": "forgetting",
+      "difficulty": 2,
+      "seed": 1301,
+      "split": "dev"
+    },
+    {
+      "task_id": "FGT_02",
+      "category": "forgetting",
+      "difficulty": 1,
+      "seed": 1302,
+      "split": "dev"
+    },
+    {
+      "task_id": "FGT_03",
+      "category": "forgetting",
+      "difficulty": 1,
+      "seed": 1303,
+      "split": "dev"
+    },
+    {
+      "task_id": "FGT_04",
+      "category": "forgetting",
+      "difficulty": 2,
+      "seed": 1304,
+      "split": "dev"
+    },
+    {
+      "task_id": "FGT_05",
+      "category": "forgetting",
+      "difficulty": 1,
+      "seed": 1305,
+      "split": "dev"
+    },
+    {
+      "task_id": "FGT_00",
+      "category": "forgetting",
+      "difficulty": 2,
+      "seed": 5300,
+      "split": "held_out"
+    },
+    {
+      "task_id": "FGT_01",
+      "category": "forgetting",
+      "difficulty": 1,
+      "seed": 5301,
+      "split": "held_out"
+    },
+    {
+      "task_id": "FGT_02",
+      "category": "forgetting",
+      "difficulty": 1,
+      "seed": 5302,
+      "split": "held_out"
+    },
+    {
+      "task_id": "FGT_03",
+      "category": "forgetting",
+      "difficulty": 2,
+      "seed": 5303,
+      "split": "held_out"
+    },
+    {
+      "task_id": "FGT_04",
+      "category": "forgetting",
+      "difficulty": 1,
+      "seed": 5304,
+      "split": "held_out"
+    },
+    {
+      "task_id": "FGT_05",
+      "category": "forgetting",
+      "difficulty": 1,
+      "seed": 5305,
+      "split": "held_out"
+    },
+    {
+      "task_id": "ADS_00",
+      "category": "adversarial",
+      "difficulty": 2,
+      "seed": 1400,
+      "split": "dev"
+    },
+    {
+      "task_id": "ADS_01",
+      "category": "adversarial",
+      "difficulty": 1,
+      "seed": 1401,
+      "split": "dev"
+    },
+    {
+      "task_id": "ADS_02",
+      "category": "adversarial",
+      "difficulty": 1,
+      "seed": 1402,
+      "split": "dev"
+    },
+    {
+      "task_id": "ADS_03",
+      "category": "adversarial",
+      "difficulty": 2,
+      "seed": 1403,
+      "split": "dev"
+    },
+    {
+      "task_id": "ADS_04",
+      "category": "adversarial",
+      "difficulty": 1,
+      "seed": 1404,
+      "split": "dev"
+    },
+    {
+      "task_id": "ADS_05",
+      "category": "adversarial",
+      "difficulty": 1,
+      "seed": 1405,
+      "split": "dev"
+    },
+    {
+      "task_id": "ADS_00",
+      "category": "adversarial",
+      "difficulty": 1,
+      "seed": 5400,
+      "split": "held_out"
+    },
+    {
+      "task_id": "ADS_01",
+      "category": "adversarial",
+      "difficulty": 1,
+      "seed": 5401,
+      "split": "held_out"
+    },
+    {
+      "task_id": "ADS_02",
+      "category": "adversarial",
+      "difficulty": 2,
+      "seed": 5402,
+      "split": "held_out"
+    },
+    {
+      "task_id": "ADS_03",
+      "category": "adversarial",
+      "difficulty": 1,
+      "seed": 5403,
+      "split": "held_out"
+    },
+    {
+      "task_id": "ADS_04",
+      "category": "adversarial",
+      "difficulty": 1,
+      "seed": 5404,
+      "split": "held_out"
+    },
+    {
+      "task_id": "ADS_05",
+      "category": "adversarial",
+      "difficulty": 2,
+      "seed": 5405,
+      "split": "held_out"
+    },
+    {
+      "task_id": "CF_00",
+      "category": "counterfactual",
+      "difficulty": 1,
+      "seed": 1500,
+      "split": "dev"
+    },
+    {
+      "task_id": "CF_01",
+      "category": "counterfactual",
+      "difficulty": 1,
+      "seed": 1501,
+      "split": "dev"
+    },
+    {
+      "task_id": "CF_02",
+      "category": "counterfactual",
+      "difficulty": 1,
+      "seed": 1502,
+      "split": "dev"
+    },
+    {
+      "task_id": "CF_03",
+      "category": "counterfactual",
+      "difficulty": 1,
+      "seed": 1503,
+      "split": "dev"
+    },
+    {
+      "task_id": "CF_04",
+      "category": "counterfactual",
+      "difficulty": 1,
+      "seed": 1504,
+      "split": "dev"
+    },
+    {
+      "task_id": "CF_00",
+      "category": "counterfactual",
+      "difficulty": 1,
+      "seed": 5500,
+      "split": "held_out"
+    },
+    {
+      "task_id": "CF_01",
+      "category": "counterfactual",
+      "difficulty": 1,
+      "seed": 5501,
+      "split": "held_out"
+    },
+    {
+      "task_id": "CF_02",
+      "category": "counterfactual",
+      "difficulty": 1,
+      "seed": 5502,
+      "split": "held_out"
+    },
+    {
+      "task_id": "CF_03",
+      "category": "counterfactual",
+      "difficulty": 1,
+      "seed": 5503,
+      "split": "held_out"
+    },
+    {
+      "task_id": "CF_04",
+      "category": "counterfactual",
+      "difficulty": 1,
+      "seed": 5504,
+      "split": "held_out"
+    },
+    {
+      "task_id": "DIST_00",
+      "category": "distractor",
+      "difficulty": 2,
+      "seed": 1600,
+      "split": "dev"
+    },
+    {
+      "task_id": "DIST_01",
+      "category": "distractor",
+      "difficulty": 2,
+      "seed": 1601,
+      "split": "dev"
+    },
+    {
+      "task_id": "DIST_02",
+      "category": "distractor",
+      "difficulty": 2,
+      "seed": 1602,
+      "split": "dev"
+    },
+    {
+      "task_id": "DIST_03",
+      "category": "distractor",
+      "difficulty": 2,
+      "seed": 1603,
+      "split": "dev"
+    },
+    {
+      "task_id": "DIST_04",
+      "category": "distractor",
+      "difficulty": 2,
+      "seed": 1604,
+      "split": "dev"
+    },
+    {
+      "task_id": "DIST_00",
+      "category": "distractor",
+      "difficulty": 2,
+      "seed": 5600,
+      "split": "held_out"
+    },
+    {
+      "task_id": "DIST_01",
+      "category": "distractor",
+      "difficulty": 2,
+      "seed": 5601,
+      "split": "held_out"
+    },
+    {
+      "task_id": "DIST_02",
+      "category": "distractor",
+      "difficulty": 2,
+      "seed": 5602,
+      "split": "held_out"
+    },
+    {
+      "task_id": "DIST_03",
+      "category": "distractor",
+      "difficulty": 2,
+      "seed": 5603,
+      "split": "held_out"
+    },
+    {
+      "task_id": "DIST_04",
+      "category": "distractor",
+      "difficulty": 2,
+      "seed": 5604,
+      "split": "held_out"
+    }
+  ],
+  "benchmark_hash": "3ab9f94052df61bfd56e1619c5013d7eda14d70366c449e9671610946e144639"
 }
