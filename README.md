@@ -1,169 +1,155 @@
-# SACAM — Agentic-Memory Benchmark & Evaluation Instrument
+# SACAM — Agentic-Memory Benchmark & Causal Memory Evaluation
 
-**Status:** Milestone 1 (specification) and Milestone 2 (evaluation harness) complete;
-Milestone 3 smoke-scale run executed with the deterministic mock model as **instrument
-validation only** (no research claims). The full live-model benchmark run is the only
-remaining gate before any research statement is possible.
+**Status:** 
+- **SACAM v0.1** (legacy): Complete. Full live run executed. Hypothesis NOT supported (E1, E2 fire).
+- **Causal Memory Evaluation v1** (current): Protocol frozen. Benchmark generated. Instrument validation complete. Protected run pending explicit authorization.
 
 This repository is an **experimental instrument**, not a demonstration. Its purpose is to
-determine whether a memory system with explicit memory management ("SACAM") measurably
-improves long-horizon agentic-task performance over the baselines defined here — and,
-critically, to be capable of producing evidence **against** that claim.
+determine whether persistent memory causally improves multimodal reasoning under controlled
+interventions — and, critically, to be capable of producing evidence **against** that claim.
 
-> Nothing in this repository is a research result. The smoke-scale run with the mock
-> model validates the *instrument*, not the hypothesis.
-> No milestone-1 decisions may change after experiments begin.
+> Nothing in this repository is a research result. The smoke-scale and development runs
+> with the mock model validate the *instrument*, not the hypothesis.
 
 ---
 
 ## Overview
 
 Agentic LLM systems increasingly rely on persistent memory to behave coherently across
-many interactions. It is an open question whether *actively managing* memory — deciding
-what to retain, update, forget, consolidate — is measurably better than naive persistent
-retrieval. SACAM proposes mechanisms (selective retention, updating, explicit forgetting,
-consolidation, stale-memory resolution). This project builds a **frozen, deterministic,
-synthetic benchmark** plus a **reproducible evaluation harness** that can produce evidence
-for, against, or inconclusive about that proposal.
+many interactions. The **causal memory evaluation** asks a deeper question than "does memory help?":
+
+> **What is the causal effect of persistent memory on multimodal reasoning performance under controlled memory interventions?**
+
+The key innovation is the **counterfactual intervention layer**: paired conditions where
+everything is identical except memory state, allowing us to measure whether controlled
+changes in memory state produce predictable changes in downstream behavior.
 
 ## Research question
 
-> Does an agentic-memory system with explicit memory management provide measurable
-> improvement over no-memory and naive persistent retrieval baselines on long-horizon
-> tasks involving retention, updating, stale information, forgetting, and misleading memory?
+> When an agent receives multimodal observations over multiple steps, does persistent memory
+> improve reasoning on later tasks compared with no memory and retrieval-only memory, and can
+> controlled interventions demonstrate that the improvement is attributable to memory rather
+> than additional context, retrieval, compute, or other confounds?
 
-Full formalization, secondary questions, hypotheses, predictions and falsification rules:
-[`docs/research_question.md`](docs/research_question.md).
+Full protocol specification: [`protocol/PROTOCOL_v0.1.md`](protocol/PROTOCOL_v0.1.md).
 
-## Hypothesis (clearly not established)
+## Hypotheses
 
-> Explicit memory management yields measurably better outcomes than naive persistent
-> retrieval on the frozen benchmark — specifically on categories that require resolving
-> stale, obsolete, or misleading memories — without degrading correct retention.
+- **H1:** Persistent memory improves multimodal reasoning
+- **H2:** Retrieval alone explains most of the benefit
+- **H3:** Memory management provides additional benefit
+- **H4:** Memory can introduce harmful interference
+- **H5:** Memory interventions have causal effects
 
-This is a falsifiable hypothesis, not a claim.
+## Benchmark v1
 
-## Benchmark
+80 deterministic synthetic multimodal tasks across 7 categories:
+- Retention (12), Updating (12), Stale conflict (12), Forgetting (12)
+- Adversarial (12), Counterfactual (10), Distractor (10)
 
-Benchmark v0.1: 40 deterministic synthetic tasks across five categories
-(retention, updating, stale-conflict, forgetting, adversarial). Specification:
-[`benchmark/v0/SPEC.md`](benchmark/v0/SPEC.md). Frozen task allocation:
-[`benchmark/v0/task_manifest.json`](benchmark/v0/task_manifest.json).
+Split: 40 DEV + 40 HELD-OUT. Hash: `3ab9f94052df61bfd56e1619c5013d7eda14d70366c449e9671610946e144639`
 
-## Baselines
+Specification: [`benchmark/v1/schema.json`](benchmark/v1/schema.json)
 
-| System | Definition |
-| --- | --- |
-| A. No Memory | No persistent memory; single-turn context per interaction. |
-| B. Naive Retrieval | Append + deterministic term-overlap retrieval + top-k; no management. |
-| C. Structured Memory | Typed records with key-based reconciliation (newest-wins per key); minimal structure. |
-| D. SACAM (v0) | Minimal active-management plugin (superseded/untrusted downranking, recency) behind the common interface. Full architecture is future work. |
-| D2. SACAM (v1) | v0.2 provenance-aware supersession fix: same-label claims are superseded only by not-weaker claims (`src/memory/sacam_v1.py`). |
-| Control: Full-Context | Naive retrieval with `top_k = all` (isolates the "more context, not better memory" confound). |
+## Systems
 
-Precise definitions: [`docs/benchmark_specification.md`](docs/benchmark_specification.md).
+| ID | System | Description |
+|----|--------|-------------|
+| A | no_memory | No persistent memory |
+| B | naive_retrieval | Append + top-k retrieval |
+| C | structured_memory | Typed records, key-based reconciliation |
+| D | sacam_v1 | Proposed: provenance-aware management |
+| E | full_context | Control: retrieval with top_k = all |
 
-## Method
+## Causal estimands
 
-Scripted, deterministic interaction sessions with a frozen memory-event stream delivered
-identically to every memory system. Evaluation is rule-based, objective, and frozen.
-Protocol: [`docs/experiment_protocol.md`](docs/experiment_protocol.md).
+| Estimand | Comparison |
+|----------|-----------|
+| τ_memory | memory vs no memory |
+| τ_retrieval | retrieval-only vs no memory |
+| τ_management | proposed vs retrieval-only |
+| τ_intervention | memory state A vs B |
+| CCR | counterfactual consistency rate |
 
-## Installation
+## Key metrics
 
-```powershell
-py -3.10 -m venv .venv; .\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt        # jsonschema<5, PyYAML<7, pytest<9
-pip install -e .                        # optional; tests run from repo root
+- **Primary:** Task Success Rate (TSR)
+- **Secondary:** MCS, category success rates, CCR, failure rates, retrieval quality
+
+## Protocol freeze
+
+The protocol is **frozen** at v0.1. See [`protocol/freeze_record.md`](protocol/freeze_record.md).
+
+## How to run
+
+### Tests
+```bash
+python -m pytest tests -q                    # 64 tests (25 v0 + 39 v1)
 ```
 
-## Quick start
-
-```powershell
-python -m pytest tests -q               # 23 tests: tasks, memory, harness, metrics, config
-python experiments/generate_benchmark.py # regenerate + validate benchmark/v0/tasks.jsonl (frozen)
-python experiments/run.py --config configs/smoke.yaml     # smoke run (mock model, fast)
-python experiments/analyze.py --config configs/smoke.yaml # generated report + tables
+### Development (mock model, no API needed)
+```bash
+python experiments/run_causal.py --config configs/causal_dev.yaml
+python experiments/analyze_causal.py --config configs/causal_dev.yaml
 ```
 
-The smoke config runs 8 tasks (2 retention, 2 updating, 2 stale, 1 forgetting,
-1 adversarial) × 5 systems × 3 seeds. It uses `mock_pattern_reader`, a deterministic
-reader that returns the injected memory section verbatim, so success depends on whether
-the right memory was surfaced — it isolates the retrieval/management path.
+### Protected (requires explicit authorization + live model)
+```bash
+# Requires .env with LLM_BASE_URL, LLM_API_KEY, LLM_MODEL
+# Requires explicit authorization in config
+python experiments/run_causal.py --config configs/causal_protected.yaml
+python experiments/analyze_causal.py --config configs/causal_protected.yaml
+```
 
-## Full experiments (live model)
-
-1. Set env vars per `.env.example` (`LLM_BASE_URL`, `LLM_API_KEY`, `LLM_MODEL`).
-2. Put the model name into `configs/benchmark_v0.yaml` (`model.name`). Do not change any
-   other value — the config hash is part of the raw-result identity.
-3. `python experiments/run.py --config configs/benchmark_v0.yaml`
-   (40 tasks × 5 systems × 5 seeds; seeds `{42,7,2024,1337,2718}`, temperature 0).
-4. `python experiments/analyze.py --config configs/benchmark_v0.yaml`
-
-The E-rule check (E1–E5) is only evaluated on this full run
-([`docs/metrics.md`](docs/metrics.md) §3); on the smoke run it is marked *illustrative
-only*.
-
-## Evaluation
-
-Primary metric: **Task Success Rate (TSR)** — see [`docs/metrics.md`](docs/metrics.md)
-for the exact definition, numerator, denominator, limitations, and the pre-registered
-evidence-against rule.
-
-## Results
-
-**No research results exist.** The only executed run is the smoke-scale instrument
-validation with the deterministic mock reader (experiment `sacam_smoke_v01_b5f0e8d9`,
-report in `results/processed/`). It is labeled `instrument_validation`, never evidence:
-
-| System | TSR (3 seeds) | MCS | TSR retention |
-| --- | --- | --- | --- |
-| no_memory | 0.125 | 0.167 | 0.000 |
-| naive_retrieval | 0.625 | 0.500 | 1.000 |
-| structured_memory | 0.875 | 0.833 | 1.000 |
-| sacam_v0 | 0.625 | 0.500 | 1.000 |
-| full_context | 0.625 | 0.500 | 1.000 |
-
-What the smoke run demonstrates / does not demonstrate:
-- **Demonstrates:** generation, validation, harness, evaluator, classifier, metrics,
-  analysis and repro artifacts are wired end-to-end and deterministic under the mock.
-- **Does not demonstrate:** anything about SACAM, models, or management architectures.
-
-## Limitations
-
-The design's strengths and known limitations are documented before any research result
-exists: [`docs/methodology.md`](docs/methodology.md) (including the "more context, not
-better memory" confound and baseline-A behavior on forgetting tasks).
-
-## Reproducibility
-
-Every run captures: experiment ID, benchmark version + SHA-256, config hash, seeds, model
-identifier/version, prompt version, environment, git commit, timestamp, and raw per-task
-outputs. See [`docs/reproducibility.md`](docs/reproducibility.md). Raw artifacts live
-under `results/raw/<experiment_id>/<system>_<seed>/` (append-only; `results/` is
-git-ignored because it is regenerable from the frozen benchmark + config + model).
-
-## Research integrity
-
-- The benchmark is frozen before any result is inspected (outcome-blind protocol).
-- No experimental results may be fabricated; absent results are marked absent.
-- No task, metric, or decision rule may change after runs begin; changes create a new version.
-- No claim that SACAM "works" may be made unless the experiment demonstrates it.
-
-## Repository layout
+## Repository structure
 
 ```
 agentic-memory-benchmark/
-├── README.md
-├── LICENSE
-├── pre_registration.json      (frozen research protocol manifest)
-├── pyproject.toml
-├── APPROVAL_REQUEST.md        (frozen protocol + M2/M3 status)
-├── configs/                   (smoke.yaml, benchmark_v0.yaml)
-├── benchmark/v0/              (SPEC, schema, task_manifest, tasks.jsonl, fixtures)
-├── docs/                      (research + protocol documents)
-├── src/                       (tasks, memory, agents, evaluation, metrics, config, utils)
-├── experiments/               (run.py, analyze.py, generate_benchmark.py)
-├── tests/                     (23 tests)
-└── results/                   (git-ignored; raw/ append-only, processed/ reports)
+├── protocol/                    # Frozen protocol specification
+│   ├── PROTOCOL_v0.1.md
+│   ├── IMPLEMENTATION_PLAN.md
+│   └── freeze_record.md
+├── benchmark/
+│   ├── v0/                      # SACAM v0.1 (legacy, frozen)
+│   └── v1/                      # Causal memory evaluation v1
+│       ├── schema.json
+│       ├── task_manifest.json
+│       └── tasks.jsonl
+├── src/
+│   ├── multimodal/              # Multimodal observation interface
+│   ├── interventions/           # Intervention framework
+│   ├── causal/                  # Causal estimands and consistency
+│   ├── memory/                  # Memory systems (v0 + v1)
+│   ├── agents/                  # Agent harness and models
+│   ├── evaluation/              # Evaluator and classifier
+│   └── tasks/                   # Task loaders and generators
+├── experiments/                 # Experiment runners and analysis
+├── configs/                     # Experiment configurations
+├── tests/                       # Test suite
+├── logs/                        # Experiment log
+└── docs/                        # Documentation (v0.1)
 ```
+
+## Citations and contributions
+
+### Reused from SACAM v0.1
+- Memory interface design, term-overlap retrieval, failure taxonomy, evaluator, config system
+
+### New in causal memory evaluation v1
+- Counterfactual intervention layer, causal estimands framework, CCR metric
+- Multimodal observation interface, procedural scene generator
+- Intervention framework (distractor, stale, deletion, counterfactual)
+
+## Non-negotiable rules
+
+- `benchmark/v0/tasks.jsonl` and `benchmark/v1/tasks.jsonl` are FROZEN
+- No fabricated results
+- Protected run requires explicit authorization
+- HELD-OUT tasks must not be used for tuning
+- Negative and inconclusive results must be preserved
+- No private data
+- No unauthorized paid compute/API
+
+## License
+
+MIT
