@@ -31,7 +31,7 @@ changes in memory state produce predictable changes in downstream behavior.
 > controlled interventions demonstrate that the improvement is attributable to memory rather
 > than additional context, retrieval, compute, or other confounds?
 
-Full protocol specification: [`protocol/PROTOCOL_v0.1.md`](protocol/PROTOCOL_v0.1.md).
+Full protocol specification: [`protocol/PROTOCOL_v0.2.md`](protocol/PROTOCOL_v0.2.md).
 
 ## Hypotheses
 
@@ -78,7 +78,7 @@ Specification: [`benchmark/v1/schema.json`](benchmark/v1/schema.json)
 
 ## Protocol freeze
 
-The protocol is **frozen** at v0.1. See [`protocol/freeze_record.md`](protocol/freeze_record.md).
+The protocol is **frozen** at v0.2. See [`protocol/freeze_record.md`](protocol/freeze_record.md).
 
 ## How to run
 

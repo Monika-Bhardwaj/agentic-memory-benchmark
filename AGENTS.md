@@ -20,7 +20,7 @@ SACAM agentic-memory benchmark project. Keep it updated at the END of each sessi
 
 ### Causal Memory Evaluation v1 (in progress)
 
-- **Protocol v0.1** — FROZEN. `protocol/PROTOCOL_v0.1.md`, `protocol/freeze_record.md`.
+- **Protocol v0.2** — FROZEN. `protocol/PROTOCOL_v0.2.md`, `protocol/freeze_record.md`.
 - **Benchmark v1** — 80 tasks generated (40 DEV + 40 HELD-OUT), hash `3ab9f940...`.
 - **Intervention framework** — Distractor, Stale, Deletion, Counterfactual implemented.
 - **Causal estimands** — E1-E5 + CCR implemented.
@@ -35,7 +35,7 @@ SACAM agentic-memory benchmark project. Keep it updated at the END of each sessi
 
 ### Causal Memory Evaluation v1
 - Benchmark hash: `3ab9f94052df61bfd56e1619c5013d7eda14d70366c449e9671610946e144639`
-- Protocol: `protocol/PROTOCOL_v0.1.md` (FROZEN)
+- Protocol: `protocol/PROTOCOL_v0.2.md` (FROZEN)
 - Freeze record: `protocol/freeze_record.md`
 - DEV run: `causal_dev_v1_b3bbae92` (instrument validation only)
 

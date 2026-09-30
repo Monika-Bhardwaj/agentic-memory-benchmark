@@ -40,4 +40,4 @@ evaluation:
 harness:
   respond_to_non_query_events: false
   timeout_seconds: 60
-  max_retries: 1
+  max_retries: 0
