@@ -971,7 +971,7 @@ An experiment is considered complete when:
 |---------|----------|
 | Single task failure | Labeled OTHER; run continues |
 | System crash | Run restarted from beginning; failed run preserved |
-| API rate limit | Exponential backoff; max 3 retries |
+| API rate limit | Task labeled SYSTEM_API_FAILURE; no retry (zero retries for primary metric) |
 | Budget exceeded | Experiment stopped; partial results preserved |
 
 ### AA.3 No selective stopping
