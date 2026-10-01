@@ -82,23 +82,22 @@ The protocol is **frozen** at v0.2. See [`protocol/freeze_record.md`](protocol/f
 
 ## How to run
 
-### Tests
+### One-command entry point
 ```bash
-python -m pytest tests -q                    # 64 tests (25 v0 + 39 v1)
+make test          # Run all tests (64 tests: 25 v0 + 39 v1)
+make dev           # Run development experiment (mock model, no API)
+make dev-analysis  # Run development analysis
+make generate      # Regenerate benchmark v1 tasks
+make protected     # Run protected experiment (REQUIRES AUTHORIZATION)
 ```
 
-### Development (mock model, no API needed)
+### Individual commands
 ```bash
-python experiments/run_causal.py --config configs/causal_dev.yaml
-python experiments/analyze_causal.py --config configs/causal_dev.yaml
-```
-
-### Protected (requires explicit authorization + live model)
-```bash
-# Requires .env with LLM_BASE_URL, LLM_API_KEY, LLM_MODEL
-# Requires explicit authorization in config
-python experiments/run_causal.py --config configs/causal_protected.yaml
-python experiments/analyze_causal.py --config configs/causal_protected.yaml
+python -m pytest tests -q                                    # 64 tests (25 v0 + 39 v1)
+python experiments/run_causal.py --config configs/causal_dev.yaml      # DEV run (mock)
+python experiments/analyze_causal.py --config configs/causal_dev.yaml  # DEV analysis
+# PROTECTED RUN REQUIRES EXPLICIT AUTHORIZATION:
+# python experiments/run_causal.py --config configs/causal_protected.yaml
 ```
 
 ## Repository structure
