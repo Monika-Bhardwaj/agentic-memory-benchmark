@@ -17,7 +17,7 @@ The causal memory evaluation protocol v0.2 is frozen. This document records the 
 | Task schema | v1 | `benchmark/v1/schema.json` |
 | Task manifest | v1 | `benchmark/v1/task_manifest.json` |
 | Config (DEV) | v1 | `configs/causal_dev.yaml` |
-| Config (protected) | v1 | `configs/causal_protected.yaml` |
+| Config (protected) | v1 | `configs/causal_protected.yaml` (hash: `9165ff0eeb0dc3b5fc4affdfe713e304fdf6c09e461ba949c4aa3a11ca82af00`) |
 | Prompt version | v1-p1 | Frozen |
 | Memory interface | v1 | Frozen |
 | Evaluation protocol | v0.2 | Frozen |
@@ -59,6 +59,15 @@ The causal memory evaluation protocol v0.2 is frozen. This document records the 
 - **MME:** +0.05
 - **Retention tolerance:** -0.05
 
+## Frozen Model Identity
+
+| Field | Value |
+|-------|-------|
+| Model name | `gpt-4.1-mini` |
+| Provider | OpenAI (or OpenAI-compatible endpoint) |
+| Temperature | 0 |
+| Max output tokens | 512 |
+
 ## Frozen Budgets
 
 | Budget | Value |
@@ -69,6 +78,7 @@ The causal memory evaluation protocol v0.2 is frozen. This document records the 
 | Output tokens | 512 |
 | Temperature | 0 |
 | **Retries** | **0 (zero retries for primary metric)** |
+| **Proposed compute budget** | CPU-only, 8h per experiment, 10K API calls, 1M tokens |
 
 ## Frozen Task Split
 

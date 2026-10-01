@@ -55,6 +55,8 @@ class ExperimentConfig:
 
     prompt_version: str = "v0.1-p1"
     results_dir: str = "results"
+    protocol_version: str = "v0.2"
+    authorization_approved: bool = False
 
     def frozen_dict(self) -> dict:
         return copy.deepcopy(asdict(self))
@@ -99,6 +101,8 @@ def load_config(path: Path | str) -> ExperimentConfig:
         harness={k: v for k, v in raw.get("harness", {}).items()},
         prompt_version=str(raw.get("prompt_version", "v0.1-p1")),
         results_dir=str(exp.get("results_dir", "results")),
+        protocol_version=str(exp.get("protocol_version", "v0.2")),
+        authorization_approved=bool(exp.get("authorization_approved", False)),
     )
     cfg.memory.setdefault("sacam_weights", dict(DEFAULT_SACAM_WEIGHTS))
     cfg.memory.setdefault("retrieval_top_k", 3)

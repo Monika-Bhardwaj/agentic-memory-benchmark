@@ -15,10 +15,10 @@ experiment:
     - full_context
   results_dir: results
   authorization_approved: false  # MUST be set to true with explicit approval
-  protocol_version: v0.1
+  protocol_version: v0.2
 
 model:
-  name: REPLACE_WITH_MODEL
+  name: gpt-4.1-mini
   temperature: 0
   max_output_tokens: 512
 

@@ -52,6 +52,19 @@ def _git_commit() -> str:
 def run_causal(config_path: Path, seed_override: int | None = None, system_override: str | None = None) -> None:
     """Run causal memory evaluation experiment."""
     cfg = load_config(config_path)
+
+    # Fail-closed: reject protected runs without explicit authorization
+    if cfg.phase == "protected":
+        if not cfg.authorization_approved:
+            raise RuntimeError(
+                "PROTECTED RUN BLOCKED: authorization_approved is false. "
+                "Set authorization_approved: true in config with explicit approval."
+            )
+        if cfg.protocol_version != "v0.2":
+            raise RuntimeError(
+                f"PROTECTED RUN BLOCKED: protocol_version must be v0.2, got {cfg.protocol_version}"
+            )
+
     tasks, benchmark_hash = load_v1_tasks()
     exp_hash = cfg.hash()
     exp_id = f"{cfg.name}_{exp_hash[:8]}"
@@ -78,7 +91,7 @@ def run_causal(config_path: Path, seed_override: int | None = None, system_overr
 
     pre_reg = {
         "experiment_id": exp_id,
-        "protocol_version": "v0.1",
+        "protocol_version": cfg.protocol_version,
         "benchmark_version": cfg.benchmark_version,
         "benchmark_hash": benchmark_hash,
         "config_hash": cfg.hash(),
