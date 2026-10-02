@@ -15,6 +15,8 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+import yaml
+
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT / "src") not in sys.path:
     sys.path.insert(0, str(ROOT))
@@ -68,10 +70,9 @@ def run_causal(config_path: Path, seed_override: int | None = None, system_overr
             )
         # Require explicit protocol_version for protected configs
         # (not inherited from default)
-        raw_cfg = load_config(config_path)
-        import yaml
+        import yaml as _yaml
         with open(config_path, "r", encoding="utf-8") as fh:
-            raw = yaml.safe_load(fh) or {}
+            raw = _yaml.safe_load(fh) or {}
         exp_block = raw.get("experiment", {})
         if "protocol_version" not in exp_block:
             raise RuntimeError(
