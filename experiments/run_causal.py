@@ -53,12 +53,30 @@ def run_causal(config_path: Path, seed_override: int | None = None, system_overr
     """Run causal memory evaluation experiment."""
     cfg = load_config(config_path)
 
+    # Fail-closed: reject unknown phases
+    if cfg.phase not in ("dev", "protected"):
+        raise RuntimeError(
+            f"UNKNOWN PHASE: {cfg.phase!r}. Only 'dev' or 'protected' are allowed."
+        )
+
     # Fail-closed: reject protected runs without explicit authorization
     if cfg.phase == "protected":
-        if not cfg.authorization_approved:
+        if cfg.authorization_approved is not True:
             raise RuntimeError(
-                "PROTECTED RUN BLOCKED: authorization_approved is false. "
+                "PROTECTED RUN BLOCKED: authorization_approved is not True. "
                 "Set authorization_approved: true in config with explicit approval."
+            )
+        # Require explicit protocol_version for protected configs
+        # (not inherited from default)
+        raw_cfg = load_config(config_path)
+        import yaml
+        with open(config_path, "r", encoding="utf-8") as fh:
+            raw = yaml.safe_load(fh) or {}
+        exp_block = raw.get("experiment", {})
+        if "protocol_version" not in exp_block:
+            raise RuntimeError(
+                "PROTECTED RUN BLOCKED: protocol_version must be explicitly set "
+                "in the protected config, not inherited from default."
             )
         if cfg.protocol_version != "v0.2":
             raise RuntimeError(
