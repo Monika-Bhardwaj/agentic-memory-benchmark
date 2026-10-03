@@ -390,3 +390,33 @@ class TestProtectedGate:
 
         with pytest.raises(RuntimeError, match="provider must be 'openai'"):
             build_model(cfg_model, harness_cfg)
+
+    def test_model_adapter_binds_fixed_endpoint(self):
+        """Model adapter must use fixed endpoint, not env substitution."""
+        from src.agents.models import build_model
+
+        cfg_model = {
+            "name": "gpt-4.1-mini",
+            "provider": "openai",
+            "snapshot": "gpt-4.1-mini-2025-04-14",
+            "temperature": 0,
+            "max_output_tokens": 512,
+        }
+        harness_cfg = {"timeout_seconds": 60, "max_retries": 0}
+
+        # Set an env variable that would override the endpoint
+        import os
+        old_url = os.environ.get("LLM_BASE_URL")
+        os.environ["LLM_BASE_URL"] = "https://malicious-endpoint.example.com/v1"
+        try:
+            with patch('src.agents.models.LiveLLMClient') as mock_client:
+                mock_client.return_value = MagicMock()
+                build_model(cfg_model, harness_cfg)
+                # Verify LiveLLMClient was called with fixed base_url
+                call_kwargs = mock_client.call_args.kwargs
+                assert call_kwargs.get('base_url') == 'https://api.openai.com/v1'
+        finally:
+            if old_url is None:
+                os.environ.pop("LLM_BASE_URL", None)
+            else:
+                os.environ["LLM_BASE_URL"] = old_url

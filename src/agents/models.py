@@ -104,7 +104,12 @@ class LiveLLMClient(ModelClient):
     def __init__(self, model: str, base_url: str | None = None, api_key: str | None = None,
                  timeout: float = 60.0, max_retries: int = 2) -> None:
         self.model_name = model
-        self._base_url = (base_url or os.environ.get("LLM_BASE_URL", "https://api.openai.com/v1")).rstrip("/")
+        # For protected runs, base_url must be explicitly provided (no env substitution)
+        if base_url is not None:
+            self._base_url = base_url.rstrip("/")
+        else:
+            # Only allow env substitution for non-protected (dev) runs
+            self._base_url = os.environ.get("LLM_BASE_URL", "https://api.openai.com/v1").rstrip("/")
         self._api_key = api_key or os.environ.get("LLM_API_KEY", "")
         if not self._api_key:
             raise RuntimeError("LLM_API_KEY is not set (required for the live adapter)")
@@ -166,8 +171,13 @@ def build_model(cfg_model: dict, harness_cfg: dict) -> ModelClient:
             f"provider must be 'openai', got {provider!r}"
         )
 
+    # For protected runs, use fixed base_url (no env substitution)
+    # The endpoint is bound to the config, not the environment
+    base_url = "https://api.openai.com/v1"
+
     return LiveLLMClient(
         model=snapshot,
+        base_url=base_url,
         timeout=float(harness_cfg.get("timeout_seconds", 60)),
         max_retries=int(harness_cfg.get("max_retries", 1)),
     )
