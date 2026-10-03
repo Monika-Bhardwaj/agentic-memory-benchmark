@@ -154,8 +154,20 @@ def build_model(cfg_model: dict, harness_cfg: dict) -> ModelClient:
             "live model selected but no model id: set configs/benchmark_v0.yaml model.name "
             "or the LLM_MODEL env var"
         )
+
+    # Bind effective snapshot: use the exact snapshot field if provided,
+    # otherwise fall back to the name (moving alias)
+    snapshot = str(cfg_model.get("snapshot", name))
+    provider = str(cfg_model.get("provider", "openai"))
+
+    # Enforce provider matches expected
+    if provider != "openai":
+        raise RuntimeError(
+            f"provider must be 'openai', got {provider!r}"
+        )
+
     return LiveLLMClient(
-        model=name,
+        model=snapshot,
         timeout=float(harness_cfg.get("timeout_seconds", 60)),
         max_retries=int(harness_cfg.get("max_retries", 1)),
     )

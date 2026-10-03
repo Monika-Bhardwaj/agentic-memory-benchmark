@@ -9,7 +9,7 @@ import sys
 import tempfile
 import yaml
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -179,9 +179,8 @@ class TestProtectedGate:
             temp_path = f.name
 
         try:
-            cfg = load_config(temp_path)
-            # String "false" should be parsed as False, not True
-            assert cfg.authorization_approved is False
+            with pytest.raises(ValueError, match="authorization_approved must be a Boolean"):
+                load_config(temp_path)
         finally:
             Path(temp_path).unlink()
 
@@ -204,7 +203,190 @@ class TestProtectedGate:
             temp_path = f.name
 
         try:
-            with pytest.raises(ValueError, match="authorization_approved must be bool"):
+            with pytest.raises(ValueError, match="authorization_approved must be a Boolean"):
                 load_config(temp_path)
         finally:
             Path(temp_path).unlink()
+
+    def test_config_rejects_quoted_true_authorization(self):
+        """Config must reject quoted string 'true' for authorization_approved."""
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as f:
+            config_content = {
+                "experiment": {
+                    "name": "test_quoted_true",
+                    "phase": "dev",
+                    "seeds": [42],
+                    "authorization_approved": "true",  # Quoted string, not bool
+                },
+                "model": {"name": "mock", "temperature": 0, "max_output_tokens": 512},
+                "memory": {"retrieval_top_k": 3, "memory_budget_items": 512},
+                "evaluation": {"primary_metric": "tsr", "mme": 0.05},
+                "harness": {"max_retries": 0},
+            }
+            yaml.dump(config_content, f)
+            temp_path = f.name
+
+        try:
+            with pytest.raises(ValueError, match="authorization_approved must be a Boolean"):
+                load_config(temp_path)
+        finally:
+            Path(temp_path).unlink()
+
+    def test_config_rejects_quoted_false_authorization(self):
+        """Config must reject quoted string 'false' for authorization_approved."""
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as f:
+            config_content = {
+                "experiment": {
+                    "name": "test_quoted_false",
+                    "phase": "dev",
+                    "seeds": [42],
+                    "authorization_approved": "false",  # Quoted string, not bool
+                },
+                "model": {"name": "mock", "temperature": 0, "max_output_tokens": 512},
+                "memory": {"retrieval_top_k": 3, "memory_budget_items": 512},
+                "evaluation": {"primary_metric": "tsr", "mme": 0.05},
+                "harness": {"max_retries": 0},
+            }
+            yaml.dump(config_content, f)
+            temp_path = f.name
+
+        try:
+            with pytest.raises(ValueError, match="authorization_approved must be a Boolean"):
+                load_config(temp_path)
+        finally:
+            Path(temp_path).unlink()
+
+    def test_config_rejects_integer_authorization(self):
+        """Config must reject integer values for authorization_approved."""
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as f:
+            config_content = {
+                "experiment": {
+                    "name": "test_int_auth",
+                    "phase": "dev",
+                    "seeds": [42],
+                    "authorization_approved": 1,  # Integer, not bool
+                },
+                "model": {"name": "mock", "temperature": 0, "max_output_tokens": 512},
+                "memory": {"retrieval_top_k": 3, "memory_budget_items": 512},
+                "evaluation": {"primary_metric": "tsr", "mme": 0.05},
+                "harness": {"max_retries": 0},
+            }
+            yaml.dump(config_content, f)
+            temp_path = f.name
+
+        try:
+            with pytest.raises(ValueError, match="authorization_approved must be a Boolean"):
+                load_config(temp_path)
+        finally:
+            Path(temp_path).unlink()
+
+    def test_runner_rejects_seed_override_for_protected(self):
+        """Protected run with seed override must be rejected."""
+        from experiments.run_causal import run_causal
+
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as f:
+            config_content = {
+                "experiment": {
+                    "name": "test_seed_override",
+                    "benchmark_version": "v1",
+                    "phase": "protected",
+                    "seeds": [42],
+                    "authorization_approved": True,
+                    "protocol_version": "v0.2",
+                },
+                "model": {
+                    "name": "gpt-4.1-mini",
+                    "provider": "openai",
+                    "snapshot": "gpt-4.1-mini-2025-04-14",
+                    "temperature": 0,
+                    "max_output_tokens": 512,
+                },
+                "memory": {"retrieval_top_k": 3, "memory_budget_items": 512},
+                "evaluation": {"primary_metric": "tsr", "mme": 0.05},
+                "harness": {"max_retries": 0},
+            }
+            yaml.dump(config_content, f)
+            temp_path = f.name
+
+        try:
+            with patch('experiments.run_causal.load_v1_tasks') as mock_load:
+                mock_load.side_effect = AssertionError("Task loading should not be reached!")
+                with pytest.raises(RuntimeError, match="PROTECTED RUN BLOCKED.*overrides"):
+                    run_causal(temp_path, seed_override=99)
+        finally:
+            Path(temp_path).unlink()
+
+    def test_runner_rejects_system_override_for_protected(self):
+        """Protected run with system override must be rejected."""
+        from experiments.run_causal import run_causal
+
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as f:
+            config_content = {
+                "experiment": {
+                    "name": "test_system_override",
+                    "benchmark_version": "v1",
+                    "phase": "protected",
+                    "seeds": [42],
+                    "authorization_approved": True,
+                    "protocol_version": "v0.2",
+                },
+                "model": {
+                    "name": "gpt-4.1-mini",
+                    "provider": "openai",
+                    "snapshot": "gpt-4.1-mini-2025-04-14",
+                    "temperature": 0,
+                    "max_output_tokens": 512,
+                },
+                "memory": {"retrieval_top_k": 3, "memory_budget_items": 512},
+                "evaluation": {"primary_metric": "tsr", "mme": 0.05},
+                "harness": {"max_retries": 0},
+            }
+            yaml.dump(config_content, f)
+            temp_path = f.name
+
+        try:
+            with patch('experiments.run_causal.load_v1_tasks') as mock_load:
+                mock_load.side_effect = AssertionError("Task loading should not be reached!")
+                with pytest.raises(RuntimeError, match="PROTECTED RUN BLOCKED.*overrides"):
+                    run_causal(temp_path, system_override="no_memory")
+        finally:
+            Path(temp_path).unlink()
+
+    def test_model_adapter_uses_snapshot(self):
+        """Model adapter must use the snapshot field, not the moving alias."""
+        from src.agents.models import build_model
+
+        cfg_model = {
+            "name": "gpt-4.1-mini",
+            "provider": "openai",
+            "snapshot": "gpt-4.1-mini-2025-04-14",
+            "temperature": 0,
+            "max_output_tokens": 512,
+        }
+        harness_cfg = {"timeout_seconds": 60, "max_retries": 0}
+
+        # Mock LiveLLMClient to capture the model argument
+        with patch('src.agents.models.LiveLLMClient') as mock_client:
+            mock_client.return_value = MagicMock()
+            build_model(cfg_model, harness_cfg)
+            # Verify LiveLLMClient was called with the snapshot, not the alias
+            mock_client.assert_called_once()
+            call_kwargs = mock_client.call_args
+            assert call_kwargs.kwargs.get('model') == 'gpt-4.1-mini-2025-04-14' or \
+                   (call_kwargs.args and call_kwargs.args[0] == 'gpt-4.1-mini-2025-04-14')
+
+    def test_model_adapter_rejects_wrong_provider(self):
+        """Model adapter must reject non-openai providers."""
+        from src.agents.models import build_model
+
+        cfg_model = {
+            "name": "gpt-4.1-mini",
+            "provider": "other_provider",
+            "snapshot": "gpt-4.1-mini-2025-04-14",
+            "temperature": 0,
+            "max_output_tokens": 512,
+        }
+        harness_cfg = {"timeout_seconds": 60, "max_retries": 0}
+
+        with pytest.raises(RuntimeError, match="provider must be 'openai'"):
+            build_model(cfg_model, harness_cfg)

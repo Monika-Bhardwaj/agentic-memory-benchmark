@@ -68,6 +68,12 @@ def run_causal(config_path: Path, seed_override: int | None = None, system_overr
                 "PROTECTED RUN BLOCKED: authorization_approved is not True. "
                 "Set authorization_approved: true in config with explicit approval."
             )
+        # Reject unauthorized protected overrides
+        if seed_override is not None or system_override is not None:
+            raise RuntimeError(
+                "PROTECTED RUN BLOCKED: seed/system overrides are not allowed "
+                "for protected execution. Use the frozen configuration as-is."
+            )
         # Require explicit protocol_version for protected configs
         # (not inherited from default)
         import yaml as _yaml

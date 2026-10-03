@@ -87,22 +87,17 @@ def load_config(path: Path | str) -> ExperimentConfig:
         raise ValueError("experiment.seeds must be non-empty")
     subset = list(exp.get("tasks_subset", []))
 
-    # Handle authorization_approved without bool() coercion
-    # bool("false") is True in Python, so we must check the raw value
+    # Enforce strict Boolean type for authorization_approved
+    # Reject string "true"/"false" — only actual bool is accepted
     raw_approval = exp.get("authorization_approved", False)
     if raw_approval is None:
         authorization_approved = False
     elif type(raw_approval) is bool:
         authorization_approved = raw_approval
-    elif isinstance(raw_approval, str):
-        if raw_approval.lower() == "true":
-            authorization_approved = True
-        elif raw_approval.lower() == "false":
-            authorization_approved = False
-        else:
-            raise ValueError(f"authorization_approved must be bool, got string: {raw_approval!r}")
     else:
-        raise ValueError(f"authorization_approved must be bool, got {type(raw_approval).__name__}")
+        raise ValueError(
+            f"authorization_approved must be a Boolean, got {type(raw_approval).__name__}: {raw_approval!r}"
+        )
 
     cfg = ExperimentConfig(
         name=str(exp.get("name", "unnamed")),
